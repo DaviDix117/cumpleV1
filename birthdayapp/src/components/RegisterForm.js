@@ -5,18 +5,19 @@ import firebase from "../utils/Firebase";
 
 export default function RegisterForm(props) {
     const {changeForm} = props; //Realizar desctructuring, para sacar la función
-    const [formData, setFormData] = useState(defaultValue());
-    const [formError, setFormError] = useState({});
+    const [formData, setFormData] = useState(defaultValue()); //Guarda la información del formulario, utiliza el prototipo objeto estanciado abajo
+    const [formError, setFormError] = useState({}); //Guarda los posibles errores
 
+    //Validaciones, se inicia una vez dado al aceptar
     const register = () => {
         let errors = {};
 
-        if(!formData.email || !formData.password || !formData.repeatPassword){
+        if(!formData.email || !formData.password || !formData.repeatPassword){ //Vienen vacíos?
             if(!formData.email) errors.email = true;
             if(!formData.password) errors.password = true;
             if(!formData.repeatPassword) errors.repeatPassword = true;
 
-        } else if(!validateEmail(formData.email)) {
+        } else if(!validateEmail(formData.email)) { //
             errors.email = true;
             console.log("email invalido")
         } else if(formData.password !== formData.repeatPassword){
@@ -73,7 +74,7 @@ export default function RegisterForm(props) {
 
             <View style={styles.login}>
                 <TouchableOpacity onPress={changeForm}>
-                <Text style={styles.btnText} >Iniciar sesión</Text>
+                    <Text style={styles.btnText} >Iniciar sesión</Text>
                 </TouchableOpacity>
             </View>
             
@@ -128,5 +129,5 @@ const styles = StyleSheet.create({
     },
     error: {
         borderColor: '#940c0c',
-    }
+    },
 })
