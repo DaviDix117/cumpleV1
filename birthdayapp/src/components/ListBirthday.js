@@ -1,10 +1,12 @@
 import React,{useEffect, useState} from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View, ScrollView, Alert } from 'react-native'
 import AddBirthday from './AddBirthday'
 import ActionBar from './ActionBar'
 import firebase from '../utils/Firebase';
 import 'firebase/firestore';
 import moment from 'moment';
+import Birthday from './Birthday';
+
 
 firebase.firestore().settings({experimentalForceLongPolling: true});
 const db = firebase.firestore(firebase);
@@ -16,6 +18,7 @@ export default function ListBirthday(props) {
 
     const [birthday, setBirthday] = useState([]);
     const [pasaBirthday, setPasaBirthday] = useState([]);
+    const [reloadData, setReloadData] = useState(false);//Si esta en true se ejecuta el uUseEffect(Interruptor)
 
     useEffect(() => {
         setBirthday([]);
@@ -32,7 +35,8 @@ export default function ListBirthday(props) {
             });
             formatData(itemsArray);
         })
-    }, [])
+        setReloadData(false);
+    }, [reloadData]);
 
     const formatData = (items) => {
         const currentDate = moment().set({
@@ -68,28 +72,59 @@ export default function ListBirthday(props) {
                 pasatBrithdayTempArray.push(itemTemp);
 
             }
-
-            setBirthday(birthdayTempArray);
-            setPasaBirthday(pasatBrithdayTempArray);
         });
-    }
+        setBirthday(birthdayTempArray);
+        setPasaBirthday(pasatBrithdayTempArray);  
+    };
+
+    const delteBirthDay = (birthday) => {
+        Alert.alert(
+            'eliminar Cumpleaños',
+            `¿Estas seguro de eliminar el cumpleaños de ${birthday.name} ${birthday.lastname}`,
+            [
+                {
+                text: "Cancelar",
+                style: "cancel",
+                },
+                {
+                    text: "Eliminar!",
+                    onPress: ()=>{
+                        db.collection(user.uid)
+                        .doc(birthday.id)
+                        .delete().then(()=>{
+                            setReloadData();
+                        })
+                    },
+                },
+            ],
+            {cancelable: false},
+        );
+    };
 
     return (
         <View style={styles.container}>
             {showList ? (
-                <>
-                    <Text>LIST</Text>
-                    <Text>LIST</Text>
-                    <Text>LIST</Text>
-                    <Text>LIST</Text>
-                    <Text>LIST</Text>
-                    <ActionBar />
-                </>
+                <ScrollView style={styles.scrollView}>
+                    {birthday.map((item, index) => (
+                        <Birthday 
+                            key={index} 
+                            birthday={item} 
+                            delteBirthDay={delteBirthDay} 
+                        />
+                    ))}
+                    {pasaBirthday.map((item, index) =>(
+                        <Birthday 
+                            key={index} 
+                            birthday={item} 
+                            delteBirthDay={delteBirthDay} 
+                        />
+                    ))}
+                </ScrollView>
             ): (
-                <AddBirthday user={user} setShowList={setShowList}/>
+                <AddBirthday user={user} setShowList={setShowList} setReloadData={setReloadData}/>
             ) }
 
-            {/* Le envia el use ste¿ate de cambiar al boton que s eencuetra en un componente aparte para que este lo ejecute */}
+            {/* Le envia el use state de cambiar al boton que s eencuetra en un componente aparte para que este lo ejecute */}
             <ActionBar  showList={showList} setShowList={setShowList} />
         </View>
     )
@@ -99,5 +134,9 @@ const styles = StyleSheet.create({
     container:{
         alignItems: 'center',
         height: '100%',
+    },
+    scrollView:{
+        marginBottom: 50,
+        width: '100%',
     }
 })
