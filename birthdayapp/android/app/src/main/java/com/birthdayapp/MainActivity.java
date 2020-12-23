@@ -1,4 +1,4 @@
-package com.birthdayapp;
+package com.davidgaleano.cumple;
 
 import com.facebook.react.ReactActivity;
 
