@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView, StyleSheet, StatusBar, View, Button } from 'react-native';
+import { Text, SafeAreaView, StyleSheet, StatusBar, LogBox} from 'react-native';
 import firebase from './src/utils/Firebase';
 import "firebase/auth";
 import Auth from './src/components/Auth';
+import ListBirthday from './src/components/ListBirthday'
+
+
+LogBox.ignoreLogs(["Setting a timer for a long period of time"]);
+
 
 export default function App() {
   const [user, setUser] = useState(undefined); //GUarda el estado del usuario con el setUser
@@ -24,27 +29,12 @@ export default function App() {
       
       <SafeAreaView style={styles.background }>
         {/* si user tiene contenido, 1.muestra el texto esta logueado ~si es nulo ~ 2. carga auth */}
-        {user ? <Logout /> : <Auth />}
-      </SafeAreaView>
-
-      
+        {user ? <ListBirthday user={user}/> : <Auth />}
+      </SafeAreaView>      
 
     </>
   )
 }
-
-function Logout() {
-  const logout = () =>{
-    firebase.auth().signOut();
-  }
-
-  return(
-    <View>
-      <Text>Estas logueado</Text>
-      <Button title="cerrar sesión" onPress={logout}></Button>
-    </View>
-  )
-};
 
 const styles = StyleSheet.create({
   background:{
