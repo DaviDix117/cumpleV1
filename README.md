@@ -4,4 +4,4 @@ Con esta herramienta podrás guardar los cumpleaños de las personas que tu quie
 
 Una vez dentro, ingrsas a la opcion de Nueva fecha y pon el nombre de la persona, el apellido y la fecha de su cumpleaños. Por ultimo de das a crear cumpleaños y Listo ya puedes ver los cumpleaños que ya pasaron de color rojo, los actuales de color verde y los porvenir de color celeste.
 
-Para eliminar uno solo con tocar uno de ellos y darle en aceptar se eliminará.
+Para eliminar uno, solo con tocar uno de ellos y darle en aceptar, se eliminará.
